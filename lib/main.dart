@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:music_player/themes/light_mode.dart';
+import 'package:music_player/themes/theme_provider.dart';
 import 'package:music_player/views/SettingsPage.dart';
+import 'package:provider/provider.dart';
 
 
 void main() {
-  runApp(const MainApp());
+  runApp(
+      ChangeNotifierProvider(create: (context)=>ThemeProvider(),
+      child: const MainApp(),
+      )
+  );
 }
 
 
@@ -15,6 +22,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       title: "Music Player",
       debugShowCheckedModeBanner: false,
+      theme: Provider.of<ThemeProvider>(context).themeData,
       home: MyHomePage(),
     );
   }

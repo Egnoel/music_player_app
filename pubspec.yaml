@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  provider: ^6.1.5
 
 dev_dependencies:
   flutter_test:
@@ -17,3 +18,15 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/img/
+  fonts:
+    - family: Circular Std
+      fonts:
+        - asset: assets/fonts/CircularStd-Book.otf
+        - asset: assets/fonts/CircularStd-Medium.otf
+          weight: 600
+        - asset: assets/fonts/CircularStd-Bold.otf
+          weight: 700
+        - asset: assets/fonts/CircularStd-Black.otf
+          weight: 800
