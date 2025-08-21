@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/utils/audio_list_screen.dart';
+import 'package:music_player/utils/audio_player_handler.dart';
 import 'package:music_player/utils/mini_player.dart';
 import 'package:music_player/views/SettingsPage.dart';
 
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  final MyAudioHandler audioHandler;
+  const MyHomePage({super.key,
+    required this.audioHandler,});
 
   @override
   State<MyHomePage> createState() {
@@ -61,7 +64,7 @@ class _MyHomePage extends State<MyHomePage>{
             left: 0,
             right: 0,
             bottom: 0,
-            child: MiniPlayer(),
+            child: MiniPlayer(widget.audioHandler),
 
           ),
         ],

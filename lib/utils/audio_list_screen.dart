@@ -21,17 +21,16 @@ class _AudioListScreenState extends State<AudioListScreen> {
   }
 
   Future<void> _loadAudios() async {
-    print("Iniciando _loadAudios...");
     setState(() {
       isLoading = true;
     });
 
     try {
-      print("Chamando deviceMediaFinder.getAudios()..."); // LOG
+
     final result = await deviceMediaFinder.getAudios();
-    print("deviceMediaFinder.getAudios() retornou. Número de áudios: ${result.length}"); // LOG
+
     if (result.isNotEmpty) {
-      print("Primeiro áudio encontrado: Nome - ${result.first.name}, Artista - ${result.first.artist}, Duração - ${result.first.duration}"); // LOG DETALHADO
+
     } else {
       print("Nenhum áudio foi retornado pela biblioteca."); // LOG
     }
@@ -39,7 +38,16 @@ class _AudioListScreenState extends State<AudioListScreen> {
         audios = result;
         isLoading = false;
       });
-      print("_loadAudios concluído com sucesso.");
+    if (audios.isNotEmpty && mounted) {
+      final playerService = Provider.of<MusicPlayerService>(context, listen: false);
+      final deviceSongs = audios.map((audioInfo) => Song(
+        id: audioInfo.path,
+        title: audioInfo.name ?? 'Desconhecido',
+        artist: audioInfo.artist ?? 'Desconhecido',
+        audioUrl: audioInfo.path,
+      )).toList();
+      await playerService.loadDevicePlaylist(deviceSongs); // <--- CARREGA A PLAYLIST
+    }
     } catch (e, stackTrace) {
       print("Erro ao carregar arquivos de áudio: $e"); // LOG DE ERRO
       print("StackTrace do erro: $stackTrace");
@@ -96,13 +104,14 @@ class _AudioListScreenState extends State<AudioListScreen> {
               // --- AÇÃO AO TOCAR NA MÚSICA ---
             
                 // Crie um objeto Song a partir do AudioInfo
-                final songToPlay = Song(
-                  id: audio.path, // Usar filePath como ID único
-                  title: audio.name ?? 'Título Desconhecido',
-                  artist: audio.artist ?? 'Artista Desconhecido',
-                  audioUrl: audio.path, // filePath é o caminho para o áudio local
-                );
-                playerService.playSong(songToPlay);
+              final selectedSong = playerService.playlist[index]; // Assume que a playlist no service é a mesma que está sendo exibida
+              // ou use o map como antes se 'audios' for a fonte da verdade para esta tela
+
+              // playerService.playSong(selectedSong); // Não precisa mais de contextPlaylist se já foi carregada
+              // OU, para garantir que estamos usando a música correta da lista atual do serviço:
+
+                playerService.playSong(selectedSong);
+
 
                 // Opcional: Se o MiniPlayer estiver em outra aba/tela e você quiser
                 // navegar para a tela principal onde o MiniPlayer é visível:
